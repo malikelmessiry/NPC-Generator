@@ -46,7 +46,23 @@ def get_characters():
 
 @bp.get("/<char_id>/greetings")
 def get_greetings(char_id):
-    pass
+    character = validate_model(Character, char_id)
+
+    if not character.greetings:
+        return {"message": f"No greetings found for {character.name}"}, 201
+    
+    response = {
+        "Character Name": character.name,
+        "Greetings": []
+    }
+    for greeting in character.greetings:
+        response["Greetings"].append({
+            "greeting": greeting.greeting_text
+        })
+
+    return response
+
+
 
 @bp.post("/<char_id>/generate")
 def add_greetings(char_id):
